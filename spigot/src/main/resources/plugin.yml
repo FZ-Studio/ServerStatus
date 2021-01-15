@@ -1,0 +1,4 @@
+name: ServerStatus
+version: ${project.version}
+main: xyz.fcidd.serverstatus.ServerStatus
+api-version: 1.16

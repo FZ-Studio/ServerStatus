@@ -1,0 +1,3 @@
+name: Demo
+version: ${project.version}
+main: xyz.fcidd.demo.Demo
