@@ -1,3 +1,4 @@
-name: Demo
-version: ${project.version}
-main: xyz.fcidd.demo.Demo
+name: ServerStatus
+version: v1.0.0
+author: MapleDust
+main: xyz.fcidd.server.status.ServerStatus
