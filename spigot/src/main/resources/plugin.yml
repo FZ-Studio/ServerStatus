@@ -1,4 +1,4 @@
 name: ServerStatus
-version: ${project.version}
+version: v1.0.0
 main: xyz.fcidd.serverstatus.ServerStatus
 api-version: 1.16

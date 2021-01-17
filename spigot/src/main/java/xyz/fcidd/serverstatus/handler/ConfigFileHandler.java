@@ -1,11 +1,12 @@
-package xyz.fcidd.server.status.handler;
+package xyz.fcidd.serverstatus.handler;
 
 import lombok.SneakyThrows;
-import xyz.fcidd.server.status.config.LoadConfig;
+import xyz.fcidd.serverstatus.config.LoadConfig;
 
 import java.io.File;
 import java.io.InputStream;
 import java.io.RandomAccessFile;
+import java.util.Properties;
 
 public class ConfigFileHandler {
     /**
@@ -36,25 +37,26 @@ public class ConfigFileHandler {
             resource.close();
             raf.close();
         } else {
-            LoadConfig.reloadConfig();
-            //读取配置文件的port
-            String portConfig = LoadConfig.getPort();
+            //读取配置文件
+            Properties config = LoadConfig.getConfig();
+            //获取ip
+            String ip = config.getProperty("serverStatus-server.ip");
+            //准备写入文件
             RandomAccessFile raf = new RandomAccessFile(configFile, "rw");
-            //如果端口为空
-            if (portConfig == null) {
-                //将指针移到末尾
+            //如果ip为空
+            if (ip==null){
+                //将指针移动至末尾
                 raf.seek(raf.length());
-                //读取58字节
-                data=new byte[58];
-                len=resource.read(data);
-                //将读到的数据写入文件
+                //写入速度
+                data=new byte[148];
+                //读取数据
+                len= resource.read(data);
+                //写入数据
                 raf.write(data,0,len);
             }
             //解除文件占用
             resource.close();
             raf.close();
-            //重载配置文件
         }
-        LoadConfig.reloadConfig();
     }
 }

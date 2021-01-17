@@ -6,10 +6,8 @@
 
     <groupId>xyz.fcidd</groupId>
     <artifactId>serverstatus</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>v1.0.0</version>
     <packaging>jar</packaging>
-
-    <name>Serverstatus</name>
 
     <properties>
         <java.version>1.8</java.version>
