@@ -9,7 +9,7 @@ public class Client {
 
     @SneakyThrows
     public Client() {
-        socket=new Socket("localhost",556);
+        socket=new Socket("localhost",8996);
     }
     @SneakyThrows
     public void start(){

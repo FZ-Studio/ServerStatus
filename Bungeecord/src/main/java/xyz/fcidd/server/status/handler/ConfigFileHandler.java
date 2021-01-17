@@ -36,6 +36,7 @@ public class ConfigFileHandler {
             resource.close();
             raf.close();
         } else {
+            LoadConfig.reloadConfig();
             //读取配置文件的port
             String portConfig = LoadConfig.getPort();
             RandomAccessFile raf = new RandomAccessFile("./plugins/ServerStatus/config.properties", "rw");
@@ -53,7 +54,7 @@ public class ConfigFileHandler {
             resource.close();
             raf.close();
             //重载配置文件
-            LoadConfig.reloadConfig();
         }
+        LoadConfig.reloadConfig();
     }
 }
