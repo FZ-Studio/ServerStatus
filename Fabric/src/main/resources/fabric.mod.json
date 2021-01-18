@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "id": "serverstatus",
+  "version": "${version}",
+
+  "name": "ServerStatus-Fabric",
+  "description": "这个人很懒 什么都没写",
+  "authors": [
+    "Harvey_Husky",
+    "Maple_Dust"
+  ],
+  "contact": {
+    "homepage": "https://github.com/FZ-Studio/ServerStatus/releases",
+    "sources": "https://github.com/FZ-Studio/ServerStatus"
+  },
+
+  "license": "awa",
+  "icon": "assets/serverstatus/icon.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "xyz.fcidd.serverstatus.ServerStatus"
+    ]
+  },
+  "mixins": [],
+
+  "depends": {
+    "fabricloader": ">=0.7.4",
+    "fabric": "*",
+    "minecraft": "1.16.x"
+  },
+  "suggests": {
+    "another-mod": "*"
+  }
+}

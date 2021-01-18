@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>xyz.fcidd</groupId>
-    <artifactId>serverstatus</artifactId>
+    <artifactId>ServerStatus-Spigot</artifactId>
     <version>v1.0.0</version>
     <packaging>jar</packaging>
 

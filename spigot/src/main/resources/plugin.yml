@@ -1,4 +1,7 @@
-name: ServerStatus
-version: v1.0.0
+name: ServerStatus-Spigot
+version: 1.0.0
 main: xyz.fcidd.serverstatus.ServerStatus
 api-version: 1.16
+authors:
+  - "Maple_Dust"
+  - "Harvey_Husky"

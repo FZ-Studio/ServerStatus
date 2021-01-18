@@ -1,7 +1,6 @@
 package xyz.fcidd.server.status;
 
 import lombok.SneakyThrows;
-import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.Plugin;
 import xyz.fcidd.server.status.command.ServerStatusCommand;
 import xyz.fcidd.server.status.handler.ConfigFileHandler;
@@ -20,7 +19,7 @@ public final class ServerStatus extends Plugin {
         //初始化服务器
         StartServer.initialize(this);
         //注册指令
-        ProxyServer.getInstance().getPluginManager().registerCommand(this,new ServerStatusCommand(this));
+        getProxy().getPluginManager().registerCommand(this,new ServerStatusCommand(this));
+        getProxy().registerChannel("BungeeCord");
     }
-
 }

@@ -83,6 +83,9 @@ public class ServerStatusCommand extends Command implements TabExecutor {
                     sender.sendMessage(new ComponentBuilder("§8[§6ServerStatus§8]§4未知指令，请输入/serverstatus help查看帮助").create());
                 }
                 break;
+            default :
+                sender.sendMessage(new ComponentBuilder("§8[§6ServerStatus§8]§4未知指令，请输入/serverstatus help查看帮助").create());
+                break;
         }
     }
 }

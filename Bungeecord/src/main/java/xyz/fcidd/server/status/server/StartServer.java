@@ -26,10 +26,10 @@ public class StartServer {
     @SneakyThrows
     public static void initialize(Plugin plugin) {
         int port = Integer.parseInt(LoadConfig.getPort());
-        System.out.println("[ServerStatus]正在启动内置服务器，用于检测服务器，端口为" + port);
+        plugin.getLogger().info("§8[§6ServerStatus§8]§r正在启动内置服务器，用于检测服务器，端口为" + port);
         //启动服务器，端口为用户设定的port
         server = new ServerSocket(port);
-        System.out.println("[ServerStatus]启动内置服务器完成");
+        plugin.getLogger().info("§8[§6ServerStatus§8]§r启动内置服务器完成");
         //将后端数据传入ClientHandler进行处理
         ClientHandler client = new ClientHandler(server, plugin);
         //创建线程
