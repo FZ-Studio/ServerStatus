@@ -6,7 +6,7 @@
 
     <groupId>xyz.fcidd</groupId>
     <artifactId>ServerStatus</artifactId>
-    <version>v1.0.0</version>
+    <version>v1.1.2</version>
     <packaging>jar</packaging>
 
     <properties>
@@ -19,6 +19,10 @@
             <id>bungeecord-repo</id>
             <url>https://oss.sonatype.org/content/repositories/snapshots</url>
         </repository>
+		<repository>
+		    <id>jitpack.io</id>
+		    <url>https://jitpack.io</url>
+		</repository>
     </repositories>
 
     <build>
@@ -32,10 +36,31 @@
                     <target>1.8</target>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.2.4</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <createDependencyReducedPom>false</createDependencyReducedPom>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 
     <dependencies>
+        <dependency>
+	        <groupId>com.github.Osiris-Team</groupId>
+	        <artifactId>Dream-Yaml</artifactId>
+            <version>1.9</version>
+	    </dependency>
         <dependency>
             <groupId>net.md-5</groupId>
             <artifactId>bungeecord-api</artifactId>

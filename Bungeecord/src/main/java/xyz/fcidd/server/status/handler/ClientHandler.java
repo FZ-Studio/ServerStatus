@@ -2,8 +2,9 @@ package xyz.fcidd.server.status.handler;
 
 import lombok.SneakyThrows;
 import net.md_5.bungee.api.ProxyServer;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
+import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.plugin.Plugin;
+import xyz.fcidd.server.status.config.PluginConfig;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -12,12 +13,10 @@ import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
-import java.util.Collection;
 
 public class ClientHandler implements Runnable {
 
     private final ServerSocket server;
-    private final Plugin plugin;
     private final ProxyServer bcServer;
 
     /**
@@ -28,7 +27,6 @@ public class ClientHandler implements Runnable {
      */
     public ClientHandler(ServerSocket server, Plugin plugin) {
         this.server = server;
-        this.plugin = plugin;
         this.bcServer = plugin.getProxy();
     }
 
@@ -59,10 +57,17 @@ public class ClientHandler implements Runnable {
                     int port = mcServerAddress.getPort();
                     if (host.equals(socket.getInetAddress().getHostName())
                             && port == Integer.parseInt(finalMessage[1])) {
+                        String translatedServerName = PluginConfig.getTranslateServername(mcServerInfo.getName());
                         if (finalMessage[0].equals("start")) {
-                            bcServer.broadcast("§6" + mcServerInfo.getName() + "上线啦！");
-                        }else if (finalMessage[0].equals("close")){
-                            bcServer.broadcast("§6" + mcServerInfo.getName() + "下线了");
+                            String broadcast = PluginConfig.getServerStartedBroadcast()
+                                    .replace("${server_translation}", translatedServerName).replace("&", "§")
+                                    .replace("\\§", "&");
+                            bcServer.broadcast(new ComponentBuilder(broadcast).create());
+                        } else if (finalMessage[0].equals("close")) {
+                            String broadcast = PluginConfig.getServerClosedeBroadcast()
+                                    .replace("${server_translation}", translatedServerName).replace("&", "§")
+                                    .replace("\\§", "&");
+                            bcServer.broadcast(new ComponentBuilder(broadcast).create());
                         }
                     }
                 });
