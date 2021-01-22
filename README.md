@@ -1,4 +1,6 @@
 # ServerStatus
+[![](https://jitpack.io/v/Osiris-Team/Dream-Yaml.svg)](https://jitpack.io/#Osiris-Team/Dream-Yaml)  
+  
 后端服务器上下线提醒  
 会在后端服务器开服完成以及开始关服时发出全体消息
 ### 配置文件
