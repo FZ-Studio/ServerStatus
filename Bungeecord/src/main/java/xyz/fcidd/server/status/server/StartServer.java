@@ -24,7 +24,7 @@ public class StartServer {
         int port = PluginConfig.getSocketPort();
         // 启动服务器，端口为用户设定的port
         server = new ServerSocket(port);
-        plugin.getProxy().broadcast(new ComponentBuilder("§8[§6ServerStatus§8]§2内置服务器已启动").create());
+        plugin.getProxy().getLogger().info("§8[§6ServerStatus§8]§2内置服务器已启动");
         // 将后端数据传入ClientHandler进行处理
         ClientHandler client = new ClientHandler(server, plugin);
         // 创建线程2

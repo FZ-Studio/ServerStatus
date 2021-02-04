@@ -16,7 +16,7 @@ public final class ServerStatus extends Plugin {
     @Override
     public void onEnable() {
         // 初始化配置文件
-        new PluginConfig(this);
+        PluginConfig.loadConfig(this);
         // 初始化服务器
         StartServer.initialize(this);
         // 注册指令

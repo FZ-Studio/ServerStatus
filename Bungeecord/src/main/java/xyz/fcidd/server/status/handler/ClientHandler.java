@@ -3,6 +3,7 @@ package xyz.fcidd.server.status.handler;
 import lombok.SneakyThrows;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.plugin.Plugin;
 import xyz.fcidd.server.status.config.PluginConfig;
 
@@ -13,6 +14,8 @@ import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
+import java.util.Collection;
+import java.util.logging.Level;
 
 public class ClientHandler implements Runnable {
 
@@ -47,34 +50,77 @@ public class ClientHandler implements Runnable {
             BufferedReader br = new BufferedReader(isr);
             String message;
             while ((message = br.readLine()) != null) {
-                String[] finalMessage = message.split("\\.");
-                bcServer.getConfig().getServers().values().forEach(mcServerInfo -> {
+                String[] finalmessage = message.split("\\.");
+                String hostSent = socket.getInetAddress().getHostName();
+                Collection<ServerInfo> servers = bcServer.getConfig().getServers().values();
+                for (ServerInfo mcServerInfo : servers) {
                     InetSocketAddress mcServerAddress = mcServerInfo.getAddress();
                     String host = mcServerAddress.getHostName();
                     if (host.equals("localhost")) {
                         host = "127.0.0.1";
                     }
                     int port = mcServerAddress.getPort();
-                    if (host.equals(socket.getInetAddress().getHostName())
-                            && port == Integer.parseInt(finalMessage[1])) {
-                        String translatedServerName = PluginConfig.getTranslateServername(mcServerInfo.getName());
-                        if (finalMessage[0].equals("start")) {
-                            String broadcast = PluginConfig.getServerStartedBroadcast()
-                                    .replace("${server_translation}", translatedServerName).replace("&", "§")
-                                    .replace("\\§", "&");
-                            bcServer.broadcast(new ComponentBuilder(broadcast).create());
-                        } else if (finalMessage[0].equals("close")) {
-                            String broadcast = PluginConfig.getServerClosedeBroadcast()
-                                    .replace("${server_translation}", translatedServerName).replace("&", "§")
-                                    .replace("\\§", "&");
-                            bcServer.broadcast(new ComponentBuilder(broadcast).create());
+                    if (host.equals(hostSent) && port == Integer.parseInt(finalmessage[1])) {
+                        String translateServerName = PluginConfig.getTranslateServername(mcServerInfo.getName());
+                        switch (finalmessage[0]) {
+                            case "start":
+                                sendServerStartedBroadcast(translateServerName, bcServer);
+                                break;
+                            case "close":
+                                sendServerClosingBroadcast(translateServerName, bcServer);
+                                break;
+                            case "message":
+                                switch (finalmessage[2]) {
+                                    case "start":
+                                        sendServerStartedBroadcast(translateServerName, bcServer);
+                                        break;
+                                    case "close":
+                                        sendServerClosingBroadcast(translateServerName, bcServer);
+                                        break;
+                                    case "custom":
+                                        if (finalmessage.length > 3) {
+                                            StringBuilder messageSentBuilder = new StringBuilder();
+                                            messageSentBuilder.append(finalmessage[3]);
+                                            for (int i = 4; i < finalmessage.length; i++) {
+                                                messageSentBuilder.append(".");
+                                                messageSentBuilder.append(finalmessage[i]);
+                                            }
+                                            sendCustomBroadcast(translateServerName, bcServer,
+                                                    messageSentBuilder.toString());
+                                        } else {
+                                            bcServer.getLogger().warning("§8[§6ServerStatus§8]§4无法处理的消息格式");
+                                        }
+                                        break;
+                                    default:
+                                        bcServer.getLogger().warning("§8[§6ServerStatus§8]§4无法处理的消息格式");
+                                        break;
+                                }
+                                break;
+                            default:
+                                bcServer.getLogger().warning("§8[§6ServerStatus§8]§4无法处理的消息格式");
+                                break;
                         }
+                        break;
                     }
-                });
-                // 将从后端发过来的消息发送给玩家
+                }
             }
             // 关闭本次会话
             socket.close();
         }
+    }
+
+    public static void sendServerStartedBroadcast(String translateServerName, ProxyServer bcServer) {
+        sendCustomBroadcast(translateServerName, bcServer, PluginConfig.getServerStartedBroadcast());
+    }
+
+    public static void sendServerClosingBroadcast(String translateServerName, ProxyServer bcServer) {
+        sendCustomBroadcast(translateServerName, bcServer, PluginConfig.getServerClosingBroadcast());
+    }
+
+    public static void sendCustomBroadcast(String translateServerName, ProxyServer bcServer, String message) {
+        message = message.replace("${server_translation}", translateServerName).replace("&", "§").replace("\\§", "&");
+        // 将消息发送给玩家
+        bcServer.broadcast(new ComponentBuilder(message).create());
+        bcServer.getLogger().log(Level.INFO, "!!QQ " + message.replaceAll("[§][\\s\\S]", "")); 
     }
 }
