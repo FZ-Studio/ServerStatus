@@ -14,7 +14,7 @@
     "sources": "https://github.com/FZ-Studio/ServerStatus"
   },
 
-  "license": "awa",
+  "license": "GPL-3.0",
   "icon": "assets/serverstatus/icon.png",
 
   "environment": "*",

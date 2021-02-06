@@ -1,9 +1,8 @@
 package xyz.fcidd.serverstatus;
 
 import lombok.Getter;
-import lombok.SneakyThrows;
 import xyz.fcidd.serverstatus.command.ServerStatusCommands;
-import xyz.fcidd.serverstatus.server.SenderServer;
+import xyz.fcidd.serverstatus.util.SendStatus;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -14,10 +13,10 @@ public final class ServerStatus extends JavaPlugin {
     @Getter
     private static ServerStatus instance;
 
-    @SneakyThrows
     @Override
     public void onEnable() {
-        this.instance = this;
+        ServerStatus.instance = this;
+        // 初始化配置文件
         getConfig().options().header("连接bc端本插件的内置服务器ip及端口，ip默认为localhost，端口默认为556");
         if (!getConfig().contains("socket-ip")) {
             getConfig().addDefault("socket-ip", null);
@@ -28,14 +27,15 @@ public final class ServerStatus extends JavaPlugin {
             getConfig().set("socket-port", 556);
         }
         saveConfig();
+        // 注册命令
         getCommand("bgserverstatus").setExecutor(new ServerStatusCommands());
         // 连接ServerStatus内置服务器
-        SenderServer.sendStart(this);
+        SendStatus.sendStart();
     }
 
     @Override
     public void onDisable() {
         // 连接ServerStatus内置服务器
-        SenderServer.sendClose(this);
+        SendStatus.sendClose();
     }
 }

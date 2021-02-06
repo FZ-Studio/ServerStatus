@@ -47,7 +47,11 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
+                            <artifactSet>
+                                <excludes><exclude>net.md-5:bungeecord-api:1.16-R0.4-SNAPSHOT</exclude></excludes>
+                            </artifactSet>
                             <createDependencyReducedPom>false</createDependencyReducedPom>
+                            <minimizeJar>true</minimizeJar>
                         </configuration>
                     </execution>
                 </executions>

@@ -73,9 +73,11 @@ public class ClientHandler implements Runnable {
                                 switch (finalmessage[2]) {
                                     case "start":
                                         sendServerStartedBroadcast(translateServerName, bcServer);
+                                        bcServer.getLogger().info("§8[§6ServerStatus§8]§r本条消息由游戏内命令发出");
                                         break;
                                     case "close":
                                         sendServerClosingBroadcast(translateServerName, bcServer);
+                                        bcServer.getLogger().info("§8[§6ServerStatus§8]§r本条消息由游戏内命令发出");
                                         break;
                                     case "custom":
                                         if (finalmessage.length > 3) {
@@ -121,6 +123,6 @@ public class ClientHandler implements Runnable {
         message = message.replace("${server_translation}", translateServerName).replace("&", "§").replace("\\§", "&");
         // 将消息发送给玩家
         bcServer.broadcast(new ComponentBuilder(message).create());
-        bcServer.getLogger().log(Level.INFO, "!!QQ " + message.replaceAll("[§][\\s\\S]", "")); 
+        bcServer.getLogger().log(Level.INFO, "!!QQ " + message.replaceAll("[§][\\s\\S]", ""));
     }
 }

@@ -11,7 +11,7 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.plugin.Plugin;
 
 import xyz.fcidd.serverstatus.ServerStatus;
-import xyz.fcidd.serverstatus.server.SenderServer;
+import xyz.fcidd.serverstatus.util.SendStatus;
 import xyz.fcidd.serverstatus.util.IUtils;
 
 public class ServerStatusCommands implements TabCompleter, CommandExecutor {
@@ -19,35 +19,36 @@ public class ServerStatusCommands implements TabCompleter, CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         Plugin plugin = ServerStatus.getInstance();
-        boolean adminAuth;
-        boolean setPortAuth;
-        boolean setHostAuth;
-        boolean reloadAuth;
-        boolean helpAuth;
-        boolean messageAuth;
-        String consolePrefix = null;
-        if (sender instanceof ConsoleCommandSender) {
-            adminAuth = true;
-            setPortAuth = true;
-            setHostAuth = true;
-            reloadAuth = true;
-            helpAuth = true;
-            messageAuth = true;
-            consolePrefix = "\n";
-        } else {
+        // 查询权限
+        boolean adminAuth = true;
+        boolean setPortAuth = true;
+        boolean setHostAuth = true;
+        boolean reloadAuth = true;
+        boolean helpAuth = true;
+        boolean messageAuth = true;
+        String consolePrefix = "\n";
+        if (!(sender instanceof ConsoleCommandSender)) {
             adminAuth = sender.hasPermission("serverstatus.command.admin");
             setPortAuth = sender.hasPermission("serverstatus.command.serverstatus.setport");
             setHostAuth = sender.hasPermission("serverstatus.command.serverstatus.sethost");
             reloadAuth = sender.hasPermission("serverstatus.command.serverstatus.reload");
-            helpAuth = sender.hasPermission("serverstatus.command.serverstatus.help");
             messageAuth = sender.hasPermission("serverstatus.command.serverstatus.message");
+            helpAuth = setPortAuth || setHostAuth || reloadAuth || messageAuth;
+            consolePrefix = null;
         }
+        // 命令判断逻辑
         if (args.length == 0) {
             if (!helpAuth && !adminAuth) {
                 sender.sendMessage("§8[§6ServerStatus§8]§4你没有使用该命令的权限！");
             } else {
-                sender.sendMessage(consolePrefix + "§bServerStatus后端使用指南：\n" + "/bgServerStatus setport <端口号> 设置端口号\n"
-                        + "/bgServerStatus sethost <IP> 设置IP地址\n" + "/bgServerStatus reload 重载配置文件");
+                sender.sendMessage(consolePrefix
+                        + "§bServerStatus后端使用指南：\n"
+                        + "/bgServerStatus setport <端口号> 设置端口号\n"
+                        + "/bgServerStatus sethost <IP> 设置IP地址\n"
+                        + "/bgServerStatus reload 重载配置文件\n"
+                        + "/bgServerStatus message start 发送服务器上线消息\n"
+                        + "/bgServerStatus message close 发送服务器下线消息\n"
+                        + "/bgServerStatus message custom <消息> 发送自定义消息\n");
             }
         } else {
             switch (args[0]) {
@@ -89,9 +90,14 @@ public class ServerStatusCommands implements TabCompleter, CommandExecutor {
                     if (!helpAuth && !adminAuth) {
                         sender.sendMessage("§8[§6ServerStatus§8]§4你没有使用该命令的权限！");
                     } else {
-                        sender.sendMessage(
-                                consolePrefix + "§bServerStatus后端使用指南：\n" + "/bgServerStatus setport <端口号> 设置端口号\n"
-                                        + "/bgServerStatus sethost <IP> 设置IP地址\n" + "/bgServerStatus reload 重载配置文件\n" + "/bgServerStatus message start 发送服务器上线消息\n" + "/bgServerStatus message close 发送服务器下线消息\n" + "/bgServerStatus message custom <消息> 发送自定义消息\n");
+                        sender.sendMessage(consolePrefix
+                                + "§bServerStatus后端使用指南：\n"
+                                + "/bgServerStatus setport <端口号> 设置端口号\n"
+                                + "/bgServerStatus sethost <IP> 设置IP地址\n"
+                                + "/bgServerStatus reload 重载配置文件\n"
+                                + "/bgServerStatus message start 发送服务器上线消息\n"
+                                + "/bgServerStatus message close 发送服务器下线消息\n"
+                                + "/bgServerStatus message custom <消息> 发送自定义消息\n");
                     }
                     break;
                 case "message":
@@ -100,14 +106,14 @@ public class ServerStatusCommands implements TabCompleter, CommandExecutor {
                     } else {
                         switch (args[1]) {
                             case "start":
-                                SenderServer.sendStart(plugin);
+                                SendStatus.sendStartMessage(sender);
                                 break;
                             case "close":
-                                SenderServer.sendClose(plugin);
+                                SendStatus.sendCLoseMessage(sender);
                                 break;
                             case "custom":
                                 if (args.length == 3) {
-                                    SenderServer.sendMessage(plugin, args[2]);
+                                    SendStatus.sendCustomMessage(args[2], sender);
                                 } else {
                                     sender.sendMessage("§8[§6ServerStatus§8]§4请输入正确的消息");
                                 }

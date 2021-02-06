@@ -18,11 +18,6 @@ permissions:
     default: false
     children:
       serverstatus.command.serverstatus: true
-  serverstatus.command.serverstatus.help: 
-    description: bgServerStatus close子命令权限
-    default: false
-    children:
-      serverstatus.command.serverstatus: true
   serverstatus.command.serverstatus.setport: 
     description: bgServerStatus close子命令权限
     default: false
@@ -45,5 +40,4 @@ permissions:
       serverstatus.command.serverstatus.message: true
       serverstatus.command.serverstatus.sethost: true
       serverstatus.command.serverstatus.setport: true
-      serverstatus.command.serverstatus.help: true
       serverstatus.command.serverstatus.reload: true
