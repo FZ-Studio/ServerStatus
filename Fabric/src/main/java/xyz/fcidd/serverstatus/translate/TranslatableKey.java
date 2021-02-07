@@ -29,10 +29,20 @@ public enum TranslatableKey {
         this.returnNum = returnNum;
     }
 
+    /**
+     * 获取可翻译的key
+     * 
+     * @return key
+     */
     public String getKey() {
         return key;
     }
 
+    /**
+     * 获取命令返回值
+     * 
+     * @return 返回值
+     */
     public int getReturnNum() {
         return returnNum;
     }

@@ -74,21 +74,19 @@ public class SendStatus implements Runnable {
                 pw.print(action + "." + mcPort + "." + message);
             }
         } catch (ConnectException e) {
-            sendFeedback(sender, "§8[§6ServerStatus§8]§4连接服务器失败，请检查BC端是否启动，以及ip、端口是否正确",
+            sendFeedback(sender, "§4连接服务器失败，请检查BC端是否启动，以及ip、端口是否正确",
                     Level.WARNING);
             return;
         } catch (IOException e) {
-            sendFeedback(sender, "§8[§6ServerStatus§8]§4发送失败！", Level.WARNING);
+            sendFeedback(sender, "§4发送失败！", Level.WARNING);
             e.printStackTrace();
             return;
         }
-        sendFeedback(sender, "§8[§6ServerStatus§8]§2发送成功！", Level.INFO);
+        sendFeedback(sender, "§2发送成功！", Level.INFO);
     }
 
     private void sendFeedback(CommandSender sender, String message, Level level) {
-        if (sender != null) {
-            sender.sendMessage(message);
-        }
-        plugin.getLogger().log(level, message);
+        IMessenger.sendPlayerFeedback(sender, message);
+        IMessenger.log(message, level);
     }
 }

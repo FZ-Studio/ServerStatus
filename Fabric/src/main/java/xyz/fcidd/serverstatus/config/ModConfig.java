@@ -15,22 +15,47 @@ public class ModConfig implements ConfigData {
 	@Comment(value = "是否允许4级op使用指令")
 	private boolean allowOpCommand = false;
 
+	/**
+	 * 获取消息通道的IP
+	 * 
+	 * @return 消息通道的IP
+	 */
 	public String getSocketIp() {
 		return socketIp;
 	}
 
+	/**
+	 * 设置消息通道的IP
+	 * 
+	 * @param socketIp 消息通道的IP
+	 */
 	public void setSocketIp(String socketIp) {
 		this.socketIp = socketIp;
 	}
 
+	/**
+	 * 获取消息通道的端口
+	 * 
+	 * @return 消息通道的端口
+	 */
 	public int getSocketPort() {
 		return socketPort;
 	}
 
+	/**
+	 * 设置消息通道的端口
+	 * 
+	 * @param socketPort 消息通道的端口
+	 */
 	public void setSocketPort(int socketPort) {
 		this.socketPort = socketPort;
 	}
 
+	/**
+	 * 获取是否允许op使用指令
+	 * 
+	 * @return 否允许op使用指令
+	 */
 	public boolean getAllowOpCommand() {
 		return allowOpCommand;
 	}

@@ -1,4 +1,4 @@
-package xyz.fcidd.serverstatus.handler;
+package xyz.fcidd.serverstatus.handler.command;
 
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
@@ -9,15 +9,21 @@ import net.minecraft.text.TranslatableText;
 import xyz.fcidd.serverstatus.ServerStatus;
 import xyz.fcidd.serverstatus.config.ModConfig;
 import xyz.fcidd.serverstatus.translate.TranslatableKey;
-import xyz.fcidd.serverstatus.util.ILogger;
+import xyz.fcidd.serverstatus.util.IMessenger;
 import xyz.fcidd.serverstatus.util.IUtils;
 import xyz.fcidd.serverstatus.util.SendStatus;
 
-public class CommandHandler {
-    
-	public static final int RESET_PORT = -1;
-	public static final String RESET_HOST = null;
+public class ServerStatusCommandHandler {
 
+    public static final int RESET_PORT = -1;
+    public static final String RESET_HOST = null;
+
+    /**
+     * 主命令的权限要求
+     * 
+     * @param requirement
+     * @return
+     */
     public static boolean mainRequires(ServerCommandSource requirement) {
         try {
             return requirement.getPlayer().hasPermissionLevel(4) && ServerStatus.getConfig().getAllowOpCommand();
@@ -79,8 +85,8 @@ public class CommandHandler {
 
     public static int commandFeedback(ServerCommandSource scs, TranslatableKey feedback, String... args) {
         TranslatableText text = new TranslatableText(feedback.getKey(), (Object[]) args);
-        scs.sendFeedback(text, false);
-        ILogger.info(text.getString());
+        IMessenger.sendPlayerFeedback(scs, text);
+        IMessenger.info(text.getString());
         return feedback.getReturnNum();
     }
 }
