@@ -9,7 +9,7 @@ import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.TranslatableText;
 import xyz.fcidd.serverstatus.ServerStatus;
 import xyz.fcidd.serverstatus.config.ModConfig;
-import xyz.fcidd.serverstatus.translate.TranslatableKey;
+import xyz.fcidd.serverstatus.translate.TranslatableMessage;
 
 public class SendStatus implements Runnable {
 	private String action;
@@ -113,14 +113,14 @@ public class SendStatus implements Runnable {
 				pw.print(action + "." + ServerStatus.getMcPort() + "." + message);
 			}
 		} catch (ConnectException e) {
-			sendFeedback(scs, TranslatableKey.CONNECT_FAILED);
+			sendFeedback(scs, TranslatableMessage.CONNECT_FAILED);
 			return;
 		} catch (IOException e) {
-			sendFeedback(scs, TranslatableKey.SEND_FAILED);
+			sendFeedback(scs, TranslatableMessage.SEND_FAILED);
 			e.printStackTrace();
 			return;
 		}
-		sendFeedback(scs, TranslatableKey.SEND_SUCCEEDED);
+		sendFeedback(scs, TranslatableMessage.SEND_SUCCEEDED);
 	}
 
 	/**
@@ -130,8 +130,8 @@ public class SendStatus implements Runnable {
 	 * @param message
 	 * @param args
 	 */
-	private void sendFeedback(ServerCommandSource scs, TranslatableKey message, String... args) {
-		TranslatableText text = new TranslatableText(message.getKey(), (Object[]) args);
+	private void sendFeedback(ServerCommandSource scs, TranslatableMessage message, String... args) {
+		TranslatableText text = new TranslatableText(message.getStringKey(), (Object[]) args);
 		if (scs != null) {
 			IMessenger.sendPlayerFeedback(scs, text);
 		}

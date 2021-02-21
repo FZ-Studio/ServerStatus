@@ -12,7 +12,7 @@ import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
-import xyz.fcidd.serverstatus.translate.TranslatableKey;
+import xyz.fcidd.serverstatus.translate.TranslatableMessage;
 
 public class IMessenger {
 
@@ -90,7 +90,7 @@ public class IMessenger {
      * @param scs        发送者
      * @param messageKey 可翻译消息的key值
      */
-    public static void sendPlayerFeedback(ServerCommandSource scs, TranslatableKey messageKey, String... args) {
+    public static void sendPlayerFeedback(ServerCommandSource scs, TranslatableMessage messageKey, String... args) {
         sendPlayerFeedback(scs, messageKey, Formatting.WHITE, args);
     }
 
@@ -101,9 +101,9 @@ public class IMessenger {
      * @param message    可翻译消息的key值
      * @param formatting 可翻译消息的颜色
      */
-    public static void sendPlayerFeedback(ServerCommandSource scs, TranslatableKey messageKey, Formatting formatting,
+    public static void sendPlayerFeedback(ServerCommandSource scs, TranslatableMessage messageKey, Formatting formatting,
             String... args) {
-        sendPlayerFeedback(scs, new TranslatableText(messageKey.getKey(), (Object) args).formatted(formatting));
+        sendPlayerFeedback(scs, new TranslatableText(messageKey.getStringKey(), (Object) args).formatted(formatting));
     }
 
     /**
