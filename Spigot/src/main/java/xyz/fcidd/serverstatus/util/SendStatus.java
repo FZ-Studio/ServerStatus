@@ -78,11 +78,11 @@ public class SendStatus implements Runnable {
                     Level.WARNING);
             return;
         } catch (IOException e) {
-            sendFeedback(sender, "§4发送失败！", Level.WARNING);
+            sendFeedback(sender, "§4发送失败", Level.WARNING);
             e.printStackTrace();
             return;
         }
-        sendFeedback(sender, "§2发送成功！", Level.INFO);
+        sendFeedback(sender, "§2发送成功", Level.INFO);
     }
 
     private void sendFeedback(CommandSender sender, String message, Level level) {
