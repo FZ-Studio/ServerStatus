@@ -5,10 +5,10 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
 import me.sargunvohra.mcmods.autoconfig1u.ConfigHolder;
 import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.LiteralText;
 import xyz.fcidd.serverstatus.ServerStatus;
 import xyz.fcidd.serverstatus.config.ModConfig;
-import xyz.fcidd.serverstatus.translate.TranslatableMessage;
+import xyz.fcidd.serverstatus.translate.Translater;
 import xyz.fcidd.serverstatus.util.IMessenger;
 import xyz.fcidd.serverstatus.util.IUtils;
 import xyz.fcidd.serverstatus.util.SendStatus;
@@ -16,7 +16,7 @@ import xyz.fcidd.serverstatus.util.SendStatus;
 public class ServerStatusCommandHandler {
 
     public static final int RESET_PORT = -1;
-    public static final String RESET_HOST = null;
+    public static final String RESET = null;
 
     /**
      * 主命令的权限要求
@@ -44,11 +44,42 @@ public class ServerStatusCommandHandler {
         if (socketPort == RESET_PORT) {
             ServerStatus.getConfig().setSocketPort(ModConfig.DEFAULT_PORT);
             ServerStatus.getConfigHolder().save();
-            return commandFeedback(c.getSource(), TranslatableMessage.COMMAND_SUCCEEDED_DEFAULT_PORT);
+            commandFeedback(c.getSource(), Translater.getTranslated(Translater.COMMAND_DEFAULT_PORT_SUCCEEDED,
+                    String.valueOf(ModConfig.DEFAULT_PORT)));
+            return 1;
         }
         ServerStatus.getConfig().setSocketPort(socketPort);
         ServerStatus.getConfigHolder().save();
-        return commandFeedback(c.getSource(), TranslatableMessage.COMMAND_SUCCEEDED_SET_PORT);
+        commandFeedback(c.getSource(),
+                Translater.getTranslated(Translater.COMMAND_SETPORT_SUCCEEDED, String.valueOf(socketPort)));
+        return 1;
+    }
+
+    /**
+     * 设置频道IP地址
+     * 
+     * @param c          命令环境
+     * @param socketHost 频道IP地址
+     * @return 命令返回值
+     */
+    public static int setLang(CommandContext<ServerCommandSource> c, String lang) {
+        if (lang == RESET) {
+            ServerStatus.getConfig().setLang(ModConfig.DEFAULT_LANG);
+            ServerStatus.getConfigHolder().save();
+            commandFeedback(c.getSource(),
+                    Translater.getTranslated(Translater.COMMAND_DEFAULT_LANG_SUCCEEDED, ModConfig.DEFAULT_LANG));
+            return 1;
+        } else {
+            if (ServerStatus.getConfig().setLang(lang)) {
+                ServerStatus.getConfigHolder().save();
+                commandFeedback(c.getSource(), Translater.getTranslated(Translater.COMMAND_SETLANG_SUCCEEDED, lang));
+                return 1;
+            } else {
+                IMessenger.sendPlayerFeedback(c.getSource(),
+                        Translater.getTranslated(Translater.COMMAND_SETLANG_WRONG_FORMAT));
+                return 0;
+            }
+        }
     }
 
     /**
@@ -59,16 +90,20 @@ public class ServerStatusCommandHandler {
      * @return 命令返回值
      */
     public static int setHost(CommandContext<ServerCommandSource> c, String socketHost) {
-        if (socketHost == RESET_HOST) {
+        if (socketHost == RESET) {
             ServerStatus.getConfig().setSocketIp(ModConfig.DEFAULT_HOST);
             ServerStatus.getConfigHolder().save();
-            return commandFeedback(c.getSource(), TranslatableMessage.COMMAND_SUCCEEDED_DEFAULT_HOST);
+            commandFeedback(c.getSource(),
+                    Translater.getTranslated(Translater.COMMAND_DEFAULT_HOST_SUCCEEDED, ModConfig.DEFAULT_HOST));
+            return 1;
         } else if (IUtils.isHost(socketHost)) {
             ServerStatus.getConfig().setSocketIp(socketHost);
             ServerStatus.getConfigHolder().save();
-            return commandFeedback(c.getSource(), TranslatableMessage.COMMAND_SUCCEEDED_SET_HOST);
+            commandFeedback(c.getSource(), Translater.getTranslated(Translater.COMMAND_SETHOST_SUCCEEDED, socketHost));
+            return 1;
         }
-        return commandFeedback(c.getSource(), TranslatableMessage.COMMAND_WRONG_FORMAT_SET_HOST);
+        IMessenger.sendPlayerFeedback(c.getSource(), Translater.getTranslated(Translater.COMMAND_SETHOST_WRONG_FORMAT));
+        return 0;
     }
 
     /**
@@ -81,7 +116,8 @@ public class ServerStatusCommandHandler {
         ConfigHolder<ModConfig> config = ServerStatus.getConfigHolder();
         config.load();
         ServerStatus.setConfig(config.get());
-        return commandFeedback(c.getSource(), TranslatableMessage.COMMAND_SUCCEEDED_RELOAD);
+        commandFeedback(c.getSource(), Translater.getTranslated(Translater.COMMAND_RELOAD_SUCCEEDED));
+        return 1;
     }
 
     /**
@@ -91,7 +127,7 @@ public class ServerStatusCommandHandler {
      * @return
      */
     public static int help(CommandContext<ServerCommandSource> c) {
-        TranslatableText text = new TranslatableText(TranslatableMessage.COMMAND_HELP.getStringKey());
+        LiteralText text = new LiteralText(Translater.getTranslated(Translater.COMMAND_HELP));
         try {
             c.getSource().getPlayer();
             IMessenger.sendPlayerFeedback(c.getSource(), text);
@@ -138,15 +174,13 @@ public class ServerStatusCommandHandler {
     /**
      * 发送命令反馈
      * 
-     * @param scs             命令发送者
+     * @param scs                 命令发送者
      * @param TranslatableMessage 可翻译的key
-     * @param args            翻译文本中的填充字符
+     * @param args                翻译文本中的填充字符
      * @return 命令返回值
      */
-    private static int commandFeedback(ServerCommandSource scs, TranslatableMessage TranslatableMessage, String... args) {
-        TranslatableText text = new TranslatableText(TranslatableMessage.getStringKey(), (Object[]) args);
-        IMessenger.sendPlayerFeedback(scs, text);
-        IMessenger.info(text.getString());
-        return TranslatableMessage.getReturnNum();
+    private static void commandFeedback(ServerCommandSource scs, String message) {
+        IMessenger.sendPlayerFeedback(scs, message);
+        IMessenger.info(message);
     }
 }

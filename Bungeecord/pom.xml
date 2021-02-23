@@ -6,7 +6,7 @@
 
     <groupId>xyz.fcidd</groupId>
     <artifactId>ServerStatus-BungeeCord</artifactId>
-    <version>v2.0.0</version>
+    <version>v2.1.0</version>
     <packaging>jar</packaging>
 
     <properties>

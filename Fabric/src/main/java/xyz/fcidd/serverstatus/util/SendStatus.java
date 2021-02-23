@@ -5,11 +5,12 @@ import java.net.ConnectException;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 
+import org.apache.logging.log4j.Level;
+
 import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.text.TranslatableText;
 import xyz.fcidd.serverstatus.ServerStatus;
 import xyz.fcidd.serverstatus.config.ModConfig;
-import xyz.fcidd.serverstatus.translate.TranslatableMessage;
+import xyz.fcidd.serverstatus.translate.Translater;
 
 public class SendStatus implements Runnable {
 	private String action;
@@ -113,14 +114,14 @@ public class SendStatus implements Runnable {
 				pw.print(action + "." + ServerStatus.getMcPort() + "." + message);
 			}
 		} catch (ConnectException e) {
-			sendFeedback(scs, TranslatableMessage.CONNECT_FAILED);
+			sendFeedback(scs, Translater.getTranslated(Translater.CONNECT_FAILED), Level.WARN);
 			return;
 		} catch (IOException e) {
-			sendFeedback(scs, TranslatableMessage.SEND_FAILED);
+			sendFeedback(scs, Translater.getTranslated(Translater.SEND_FAILED), Level.WARN);
 			e.printStackTrace();
 			return;
 		}
-		sendFeedback(scs, TranslatableMessage.SEND_SUCCEEDED);
+		sendFeedback(scs, Translater.getTranslated(Translater.SEND_SUCCEEDED), Level.INFO);
 	}
 
 	/**
@@ -130,15 +131,10 @@ public class SendStatus implements Runnable {
 	 * @param message
 	 * @param args
 	 */
-	private void sendFeedback(ServerCommandSource scs, TranslatableMessage message, String... args) {
-		TranslatableText text = new TranslatableText(message.getStringKey(), (Object[]) args);
+	private void sendFeedback(ServerCommandSource scs, String message, Level level) {
 		if (scs != null) {
-			IMessenger.sendPlayerFeedback(scs, text);
+			IMessenger.sendPlayerFeedback(scs, message);
 		}
-		if (message.getReturnNum() == 0) {
-			IMessenger.warning(text.getString());
-		} else {
-			IMessenger.info(text.getString());
-		}
+		IMessenger.log(message, level);
 	}
 }

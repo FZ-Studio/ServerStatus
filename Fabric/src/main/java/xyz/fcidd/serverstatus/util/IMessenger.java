@@ -10,16 +10,15 @@ import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
-import xyz.fcidd.serverstatus.translate.TranslatableMessage;
 
 public class IMessenger {
 
     private static final Logger logger = LogManager.getLogger("ServerStatus");
     private static final Logger nonPrefixLogger = LogManager.getLogger();
     private static final MutableText PREFIX = new LiteralText("[").formatted(Formatting.DARK_GRAY)
-            .append("ServerStatus").formatted(Formatting.GOLD).append("]").formatted(Formatting.DARK_GRAY);
+            .append(new LiteralText("ServerStatus").formatted(Formatting.GOLD))
+            .append(new LiteralText("]").formatted(Formatting.DARK_GRAY));
 
     /**
      * INFO
@@ -85,28 +84,6 @@ public class IMessenger {
     }
 
     /**
-     * 向命令发送者发送可翻译消息
-     * 
-     * @param scs        发送者
-     * @param messageKey 可翻译消息的key值
-     */
-    public static void sendPlayerFeedback(ServerCommandSource scs, TranslatableMessage messageKey, String... args) {
-        sendPlayerFeedback(scs, messageKey, Formatting.WHITE, args);
-    }
-
-    /**
-     * 向命令发送者发送可翻译消息
-     * 
-     * @param scs        发送者
-     * @param message    可翻译消息的key值
-     * @param formatting 可翻译消息的颜色
-     */
-    public static void sendPlayerFeedback(ServerCommandSource scs, TranslatableMessage messageKey, Formatting formatting,
-            String... args) {
-        sendPlayerFeedback(scs, new TranslatableText(messageKey.getStringKey(), (Object) args).formatted(formatting));
-    }
-
-    /**
      * 向命令发送者发送消息
      * 
      * @param scs     发送者
@@ -115,11 +92,25 @@ public class IMessenger {
     public static void sendPlayerFeedback(ServerCommandSource scs, Text message) {
         try {
             scs.getPlayer();
-            scs.sendFeedback(PREFIX.append(message), false);
+            scs.sendFeedback(getPrefix().append(message), false);
         } catch (CommandSyntaxException e) {
 
         } catch (NullPointerException e) {
             warning(e.getMessage());
         }
+    }
+
+    /**
+     * 向命令发送者发送消息
+     * 
+     * @param scs     发送者
+     * @param message 消息
+     */
+    public static void sendPlayerFeedback(ServerCommandSource scs, String message) {
+        sendPlayerFeedback(scs, new LiteralText(message).formatted(Formatting.WHITE));
+    }
+
+    public static MutableText getPrefix() {
+        return PREFIX.shallowCopy();
     }
 }
