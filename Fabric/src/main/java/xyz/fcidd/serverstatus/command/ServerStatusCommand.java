@@ -3,7 +3,7 @@ package xyz.fcidd.serverstatus.command;
 import net.minecraft.command.CommandSource;
 import net.minecraft.server.command.ServerCommandSource;
 import xyz.fcidd.serverstatus.handler.command.ServerStatusCommandHandler;
-import xyz.fcidd.serverstatus.translate.Langs;
+import xyz.fcidd.serverstatus.translate.LangManager;
 
 import com.mojang.brigadier.CommandDispatcher;
 import static com.mojang.brigadier.arguments.IntegerArgumentType.*;
@@ -48,7 +48,7 @@ public class ServerStatusCommand {
                 .then(
                     argument("lang", string())
                     .suggests((commandContext, suggestionsBuilder) ->
-                        CommandSource.suggestMatching(Langs.getLangsMap().keySet(), suggestionsBuilder)
+                        CommandSource.suggestMatching(LangManager.getLangsList(), suggestionsBuilder)
                     )
                     .executes(c -> ServerStatusCommandHandler.setLang(c, getString(c, "lang")))
                 )

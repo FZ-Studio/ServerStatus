@@ -9,6 +9,7 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.minecraft.server.MinecraftServer;
 import xyz.fcidd.serverstatus.command.ServerStatusCommand;
 import xyz.fcidd.serverstatus.config.ModConfig;
+import xyz.fcidd.serverstatus.translate.LangManager;
 import xyz.fcidd.serverstatus.util.SendStatus;
 
 public class ServerStatus implements ModInitializer {
@@ -77,10 +78,13 @@ public class ServerStatus implements ModInitializer {
 	 */
 	@Override
 	public void onInitialize() {
+		// 传递自身
 		ServerStatus.instance = this;
 		AutoConfig.register(ModConfig.class, JanksonConfigSerializer::new);
 		ServerStatus.configHolder = AutoConfig.getConfigHolder(ModConfig.class);
 		ServerStatus.config = ServerStatus.configHolder.getConfig();
+		// 加载语言文件
+		LangManager.loadLangs();
 		// 注册命令
 		CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> {
 			if (dedicated) {

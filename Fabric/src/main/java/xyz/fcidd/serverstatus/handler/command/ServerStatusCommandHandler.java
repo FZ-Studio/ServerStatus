@@ -8,7 +8,8 @@ import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.LiteralText;
 import xyz.fcidd.serverstatus.ServerStatus;
 import xyz.fcidd.serverstatus.config.ModConfig;
-import xyz.fcidd.serverstatus.translate.Translater;
+import xyz.fcidd.serverstatus.translate.LangManager;
+import xyz.fcidd.serverstatus.translate.TranslatableKey;
 import xyz.fcidd.serverstatus.util.IMessenger;
 import xyz.fcidd.serverstatus.util.IUtils;
 import xyz.fcidd.serverstatus.util.SendStatus;
@@ -44,14 +45,14 @@ public class ServerStatusCommandHandler {
         if (socketPort == RESET_PORT) {
             ServerStatus.getConfig().setSocketPort(ModConfig.DEFAULT_PORT);
             ServerStatus.getConfigHolder().save();
-            commandFeedback(c.getSource(), Translater.getTranslated(Translater.COMMAND_DEFAULT_PORT_SUCCEEDED,
+            commandFeedback(c.getSource(), LangManager.getTranslated(TranslatableKey.COMMAND_DEFAULT_PORT_SUCCEEDED,
                     String.valueOf(ModConfig.DEFAULT_PORT)));
             return 1;
         }
         ServerStatus.getConfig().setSocketPort(socketPort);
         ServerStatus.getConfigHolder().save();
         commandFeedback(c.getSource(),
-                Translater.getTranslated(Translater.COMMAND_SETPORT_SUCCEEDED, String.valueOf(socketPort)));
+                LangManager.getTranslated(TranslatableKey.COMMAND_SETPORT_SUCCEEDED, String.valueOf(socketPort)));
         return 1;
     }
 
@@ -67,16 +68,16 @@ public class ServerStatusCommandHandler {
             ServerStatus.getConfig().setLang(ModConfig.DEFAULT_LANG);
             ServerStatus.getConfigHolder().save();
             commandFeedback(c.getSource(),
-                    Translater.getTranslated(Translater.COMMAND_DEFAULT_LANG_SUCCEEDED, ModConfig.DEFAULT_LANG));
+                    LangManager.getTranslated(TranslatableKey.COMMAND_DEFAULT_LANG_SUCCEEDED, ModConfig.DEFAULT_LANG));
             return 1;
         } else {
             if (ServerStatus.getConfig().setLang(lang)) {
                 ServerStatus.getConfigHolder().save();
-                commandFeedback(c.getSource(), Translater.getTranslated(Translater.COMMAND_SETLANG_SUCCEEDED, lang));
+                commandFeedback(c.getSource(), LangManager.getTranslated(TranslatableKey.COMMAND_SETLANG_SUCCEEDED, lang));
                 return 1;
             } else {
                 IMessenger.sendPlayerFeedback(c.getSource(),
-                        Translater.getTranslated(Translater.COMMAND_SETLANG_WRONG_FORMAT));
+                        LangManager.getTranslated(TranslatableKey.COMMAND_SETLANG_WRONG_FORMAT));
                 return 0;
             }
         }
@@ -94,15 +95,15 @@ public class ServerStatusCommandHandler {
             ServerStatus.getConfig().setSocketIp(ModConfig.DEFAULT_HOST);
             ServerStatus.getConfigHolder().save();
             commandFeedback(c.getSource(),
-                    Translater.getTranslated(Translater.COMMAND_DEFAULT_HOST_SUCCEEDED, ModConfig.DEFAULT_HOST));
+                    LangManager.getTranslated(TranslatableKey.COMMAND_DEFAULT_HOST_SUCCEEDED, ModConfig.DEFAULT_HOST));
             return 1;
         } else if (IUtils.isHost(socketHost)) {
             ServerStatus.getConfig().setSocketIp(socketHost);
             ServerStatus.getConfigHolder().save();
-            commandFeedback(c.getSource(), Translater.getTranslated(Translater.COMMAND_SETHOST_SUCCEEDED, socketHost));
+            commandFeedback(c.getSource(), LangManager.getTranslated(TranslatableKey.COMMAND_SETHOST_SUCCEEDED, socketHost));
             return 1;
         }
-        IMessenger.sendPlayerFeedback(c.getSource(), Translater.getTranslated(Translater.COMMAND_SETHOST_WRONG_FORMAT));
+        IMessenger.sendPlayerFeedback(c.getSource(), LangManager.getTranslated(TranslatableKey.COMMAND_SETHOST_WRONG_FORMAT));
         return 0;
     }
 
@@ -116,7 +117,7 @@ public class ServerStatusCommandHandler {
         ConfigHolder<ModConfig> config = ServerStatus.getConfigHolder();
         config.load();
         ServerStatus.setConfig(config.get());
-        commandFeedback(c.getSource(), Translater.getTranslated(Translater.COMMAND_RELOAD_SUCCEEDED));
+        commandFeedback(c.getSource(), LangManager.getTranslated(TranslatableKey.COMMAND_RELOAD_SUCCEEDED));
         return 1;
     }
 
@@ -127,7 +128,7 @@ public class ServerStatusCommandHandler {
      * @return
      */
     public static int help(CommandContext<ServerCommandSource> c) {
-        LiteralText text = new LiteralText(Translater.getTranslated(Translater.COMMAND_HELP));
+        LiteralText text = new LiteralText(LangManager.getTranslated(TranslatableKey.COMMAND_HELP));
         try {
             c.getSource().getPlayer();
             IMessenger.sendPlayerFeedback(c.getSource(), text);

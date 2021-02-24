@@ -3,7 +3,7 @@ package xyz.fcidd.serverstatus.config;
 import me.sargunvohra.mcmods.autoconfig1u.ConfigData;
 import me.sargunvohra.mcmods.autoconfig1u.annotation.Config;
 import me.sargunvohra.mcmods.autoconfig1u.shadowed.blue.endless.jankson.Comment;
-import xyz.fcidd.serverstatus.translate.Langs;
+import xyz.fcidd.serverstatus.translate.LangManager;
 
 @Config(name = "server_status")
 public class ModConfig implements ConfigData {
@@ -19,15 +19,12 @@ public class ModConfig implements ConfigData {
 	@Comment(value = "语言(zh_cn)，默认为zh_cn")
 	private String lang = "zh_cn";
 
-	public Langs getLang() {
-		Langs lang2 = Langs.getLangsMap().get(lang.toLowerCase());
-		if (lang2 == null) {
-			return Langs.ZH_CN;
-		}
-		return lang2;
+	public String getLang() {
+		return lang.toLowerCase();
 	}
 
 	public boolean setLang(String lang) {
+		lang = lang.toLowerCase();
 		if (checkLang(lang)) {
 			this.lang = lang;
 			return true;
@@ -36,7 +33,7 @@ public class ModConfig implements ConfigData {
 	}
 
 	public static boolean checkLang(String lang) {
-		return Langs.getLangsMap().containsKey(lang);
+		return LangManager.getLangsList().contains(lang);
 	}
 
 	/**

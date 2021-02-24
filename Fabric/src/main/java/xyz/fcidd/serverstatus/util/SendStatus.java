@@ -10,7 +10,8 @@ import org.apache.logging.log4j.Level;
 import net.minecraft.server.command.ServerCommandSource;
 import xyz.fcidd.serverstatus.ServerStatus;
 import xyz.fcidd.serverstatus.config.ModConfig;
-import xyz.fcidd.serverstatus.translate.Translater;
+import xyz.fcidd.serverstatus.translate.LangManager;
+import xyz.fcidd.serverstatus.translate.TranslatableKey;
 
 public class SendStatus implements Runnable {
 	private String action;
@@ -114,14 +115,14 @@ public class SendStatus implements Runnable {
 				pw.print(action + "." + ServerStatus.getMcPort() + "." + message);
 			}
 		} catch (ConnectException e) {
-			sendFeedback(scs, Translater.getTranslated(Translater.CONNECT_FAILED), Level.WARN);
+			sendFeedback(scs, LangManager.getTranslated(TranslatableKey.CONNECT_FAILED), Level.WARN);
 			return;
 		} catch (IOException e) {
-			sendFeedback(scs, Translater.getTranslated(Translater.SEND_FAILED), Level.WARN);
+			sendFeedback(scs, LangManager.getTranslated(TranslatableKey.SEND_FAILED), Level.WARN);
 			e.printStackTrace();
 			return;
 		}
-		sendFeedback(scs, Translater.getTranslated(Translater.SEND_SUCCEEDED), Level.INFO);
+		sendFeedback(scs, LangManager.getTranslated(TranslatableKey.SEND_SUCCEEDED), Level.INFO);
 	}
 
 	/**
