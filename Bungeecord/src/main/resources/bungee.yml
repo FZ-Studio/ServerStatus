@@ -1,4 +1,4 @@
 name: ServerStatus
-version: v2.1.0
+version: @pluginVersion@
 author: Harvey_Husky, Maple_Dust
 main: xyz.fcidd.serverstatus.ServerStatus

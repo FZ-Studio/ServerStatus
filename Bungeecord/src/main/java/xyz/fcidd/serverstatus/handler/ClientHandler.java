@@ -1,6 +1,5 @@
 package xyz.fcidd.serverstatus.handler;
 
-import lombok.SneakyThrows;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.config.ServerInfo;
@@ -48,80 +47,83 @@ public class ClientHandler implements Runnable {
     /**
      * 多线程重写run方法
      */
-    @SneakyThrows
     @Override
     public void run() {
         this.running = true;
         this.condition = true;
         while (this.condition) {
-            // 循环接收
-            Socket socket = server.accept();
-            // 读取后端发送过来的数据
-            InputStream in = socket.getInputStream();
-            // 将数据类型设置为utf-8编码
-            InputStreamReader isr = new InputStreamReader(in, StandardCharsets.UTF_8);
-            // 将后端的数据放入缓冲区
-            BufferedReader br = new BufferedReader(isr);
-            String message;
-            while ((message = br.readLine()) != null) {
-                String[] finalmessage = message.split("\\.");
-                String hostSent = socket.getInetAddress().getHostName();
-                Collection<ServerInfo> servers = bcServer.getConfig().getServers().values();
-                for (ServerInfo mcServerInfo : servers) {
-                    InetSocketAddress mcServerAddress = mcServerInfo.getAddress();
-                    String host = mcServerAddress.getHostName();
-                    if (host.equals("localhost")) {
-                        host = "127.0.0.1";
-                    }
-                    int port = mcServerAddress.getPort();
-                    if (host.equals(hostSent) && port == Integer.parseInt(finalmessage[1])) {
-                        String translateServerName = PluginConfig.getTranslateServername(mcServerInfo.getName());
-                        switch (finalmessage[0]) {
-                            case "start":
-                                sendServerStartedBroadcast(translateServerName, bcServer);
-                                break;
-                            case "close":
-                                sendServerClosingBroadcast(translateServerName, bcServer);
-                                break;
-                            case "message":
-                                switch (finalmessage[2]) {
-                                    case "start":
-                                        sendCustomBroadcast(translateServerName, bcServer,
-                                                PluginConfig.getServerStartedBroadcast());
-                                        break;
-                                    case "close":
-                                        sendCustomBroadcast(translateServerName, bcServer,
-                                                PluginConfig.getServerClosingBroadcast());
-                                        break;
-                                    case "custom":
-                                        if (finalmessage.length > 3) {
-                                            StringBuilder messageSentBuilder = new StringBuilder();
-                                            messageSentBuilder.append(finalmessage[3]);
-                                            for (int i = 4; i < finalmessage.length; i++) {
-                                                messageSentBuilder.append(".");
-                                                messageSentBuilder.append(finalmessage[i]);
-                                            }
-                                            sendCustomBroadcast(translateServerName, bcServer,
-                                                    messageSentBuilder.toString());
-                                        } else {
-                                            bcServer.getLogger().warning("§8[§6ServerStatus§8]§4无法处理的消息格式");
-                                        }
-                                        break;
-                                    default:
-                                        bcServer.getLogger().warning("§8[§6ServerStatus§8]§4无法处理的消息格式");
-                                        break;
-                                }
-                                break;
-                            default:
-                                bcServer.getLogger().warning("§8[§6ServerStatus§8]§4无法处理的消息格式");
-                                break;
+            try {
+                // 循环接收
+                Socket socket = server.accept();
+                // 读取后端发送过来的数据
+                InputStream in = socket.getInputStream();
+                // 将数据类型设置为utf-8编码
+                InputStreamReader isr = new InputStreamReader(in, StandardCharsets.UTF_8);
+                // 将后端的数据放入缓冲区
+                BufferedReader br = new BufferedReader(isr);
+                String message;
+                while ((message = br.readLine()) != null) {
+                    String[] finalmessage = message.split("\\.");
+                    String hostSent = socket.getInetAddress().getHostName();
+                    Collection<ServerInfo> servers = bcServer.getConfig().getServers().values();
+                    for (ServerInfo mcServerInfo : servers) {
+                        InetSocketAddress mcServerAddress = mcServerInfo.getAddress();
+                        String host = mcServerAddress.getHostName();
+                        if (host.equals("localhost")) {
+                            host = "127.0.0.1";
                         }
-                        break;
+                        int port = mcServerAddress.getPort();
+                        if (host.equals(hostSent) && port == Integer.parseInt(finalmessage[1])) {
+                            String translateServerName = PluginConfig.getTranslateServername(mcServerInfo.getName());
+                            switch (finalmessage[0]) {
+                                case "start":
+                                    sendServerStartedBroadcast(translateServerName, bcServer);
+                                    break;
+                                case "close":
+                                    sendServerClosingBroadcast(translateServerName, bcServer);
+                                    break;
+                                case "message":
+                                    switch (finalmessage[2]) {
+                                        case "start":
+                                            sendCustomBroadcast(translateServerName, bcServer,
+                                                    PluginConfig.getServerStartedBroadcast());
+                                            break;
+                                        case "close":
+                                            sendCustomBroadcast(translateServerName, bcServer,
+                                                    PluginConfig.getServerClosingBroadcast());
+                                            break;
+                                        case "custom":
+                                            if (finalmessage.length > 3) {
+                                                StringBuilder messageSentBuilder = new StringBuilder();
+                                                messageSentBuilder.append(finalmessage[3]);
+                                                for (int i = 4; i < finalmessage.length; i++) {
+                                                    messageSentBuilder.append(".");
+                                                    messageSentBuilder.append(finalmessage[i]);
+                                                }
+                                                sendCustomBroadcast(translateServerName, bcServer,
+                                                        messageSentBuilder.toString());
+                                            } else {
+                                                bcServer.getLogger().warning("§8[§6ServerStatus§8]§4无法处理的消息格式");
+                                            }
+                                            break;
+                                        default:
+                                            bcServer.getLogger().warning("§8[§6ServerStatus§8]§4无法处理的消息格式");
+                                            break;
+                                    }
+                                    break;
+                                default:
+                                    bcServer.getLogger().warning("§8[§6ServerStatus§8]§4无法处理的消息格式");
+                                    break;
+                            }
+                            break;
+                        }
                     }
                 }
+                // 关闭本次会话
+                socket.close();
+            } catch (Exception e) {
+
             }
-            // 关闭本次会话
-            socket.close();
         }
         this.running = false;
     }
@@ -174,7 +176,7 @@ public class ClientHandler implements Runnable {
             if (massageArray[i].equals("&")) {
                 if (i == 0 || !massageArray[i - 1].equals("\\")) {
                     massageArray[i] = "§";
-                }else{
+                } else {
                     massageArray[i - 1] = "";
                 }
             }

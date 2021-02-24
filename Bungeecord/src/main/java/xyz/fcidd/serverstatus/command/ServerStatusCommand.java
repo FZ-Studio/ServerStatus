@@ -1,11 +1,11 @@
 package xyz.fcidd.serverstatus.command;
 
-import lombok.SneakyThrows;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.api.plugin.TabExecutor;
+import xyz.fcidd.serverstatus.ServerStatus;
 import xyz.fcidd.serverstatus.config.PluginConfig;
 import xyz.fcidd.serverstatus.server.StartServer;
 import xyz.fcidd.serverstatus.util.IUtils;
@@ -45,7 +45,6 @@ public class ServerStatusCommand extends Command implements TabExecutor {
     /**
      * 命令主逻辑
      */
-    @SneakyThrows
     @Override
     public void execute(CommandSender sender, String[] args) {
         System.out.println(sender.getName());
@@ -58,7 +57,15 @@ public class ServerStatusCommand extends Command implements TabExecutor {
                 if (!setPortAuth && !adminAuth) {
                     sender.sendMessage(new ComponentBuilder("§8[§6ServerStatus§8]§4你没有使用该命令的权限！").create());
                 } else if (args.length == 2 && IUtils.isPort(args[1])) {
-                    PluginConfig.setSocketPort(Integer.parseInt(args[1]));
+                    try {
+                        PluginConfig.setSocketPort(Integer.parseInt(args[1]));
+                    } catch (Exception e) {
+                        sender.sendMessage(new ComponentBuilder("§8[§6ServerStatus§8]§2设置失败，请查看日志").create());
+                        e.printStackTrace();
+                        break;
+                    }
+                    plugin.getProxy().getLogger()
+                            .info("已设置端口号为" + PluginConfig.getSocketPort() + "，输入/serverstatus reload生效");
                     sender.sendMessage(
                             new ComponentBuilder("§8[§6ServerStatus§8]§2设置成功！输入/serverstatus reload生效").create());
                 } else {
@@ -70,14 +77,25 @@ public class ServerStatusCommand extends Command implements TabExecutor {
                     sender.sendMessage(new ComponentBuilder("§8[§6ServerStatus§8]§4你没有使用该命令的权限！").create());
                 } else {
                     // 重载配置
-                    plugin.getProxy().getLogger().info("重载配置文件中...");
+                    if (!sender.equals(ServerStatus.getInstance().getProxy().getConsole())) {
+                        plugin.getProxy().getLogger().info("重载配置文件中...");
+                    }
                     sender.sendMessage(new ComponentBuilder("§8[§6ServerStatus§8]§2重载配置文件中...").create());
-                    PluginConfig.loadConfig(plugin);
-                    // 关闭内置服务器
-                    StartServer.stopServer();
-                    // 初始化内置服务器
-                    StartServer.initialize(plugin);
-                    plugin.getProxy().getLogger().info("已重载");
+                    try {
+                        PluginConfig.loadConfig(plugin);
+                        // 关闭内置服务器
+                        StartServer.stopServer();
+                        // 初始化内置服务器
+                        StartServer.initialize(plugin);
+                    } catch (Exception e) {
+                        plugin.getProxy().getLogger().warning("§4重载失败");
+                        sender.sendMessage(new ComponentBuilder("§8[§6ServerStatus§8]§2重载失败，请查看日志").create());
+                        e.printStackTrace();
+                        break;
+                    }
+                    if (!sender.equals(ServerStatus.getInstance().getProxy().getConsole())) {
+                        plugin.getProxy().getLogger().info("已重载");
+                    }
                     sender.sendMessage(new ComponentBuilder("§8[§6ServerStatus§8]§2已重载").create());
                 }
                 break;

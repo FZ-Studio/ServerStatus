@@ -1,11 +1,11 @@
 package xyz.fcidd.serverstatus.server;
 
-import lombok.SneakyThrows;
 import net.md_5.bungee.api.plugin.Plugin;
 import xyz.fcidd.serverstatus.config.PluginConfig;
 import xyz.fcidd.serverstatus.handler.ClientHandler;
 import xyz.fcidd.serverstatus.util.IMessenger;
 
+import java.io.IOException;
 import java.net.ServerSocket;
 
 public class StartServer {
@@ -16,9 +16,9 @@ public class StartServer {
      * 初始化服务器
      * 
      * @param plugin 插件主类
+     * @throws IOException
      */
-    @SneakyThrows
-    public static void initialize(Plugin plugin) {
+    public static void initialize(Plugin plugin) throws IOException {
         int port = PluginConfig.getSocketPort();
         // 启动服务器，端口为用户设定的port
         server = new ServerSocket(port);
@@ -35,11 +35,18 @@ public class StartServer {
 
     /**
      * 关闭服务器
+     * 
+     * @throws IOException
      */
-    @SneakyThrows
     public static void stopServer() {
         client.stop();
-        server.close();
+        try {
+            server.close();
+        } catch (IOException e) {
+            IMessenger.warning("§4关闭内置服务器时发生了一个错误！");
+            e.printStackTrace();
+            return;
+        }
         IMessenger.info("§2内置服务器已关闭");
     }
 }
