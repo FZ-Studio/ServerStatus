@@ -168,7 +168,22 @@ public class ClientHandler implements Runnable {
     private static void sendBroadcast(String translateServerName, ProxyServer bcServer, String message,
             boolean isCustomMessage) {
         IMessenger.info("§8[§6ServerStatus§8]§r -> §2{", false);
-        message = message.replace("${server_translation}", translateServerName).replace("&", "§").replace("\\§", "&");
+        message = message.replace("${server_translation}", translateServerName);
+        String[] massageArray = message.split("");
+        for (int i = 0; i < massageArray.length; i++) {
+            if (massageArray[i].equals("&")) {
+                if (i == 0 || !massageArray[i - 1].equals("\\")) {
+                    massageArray[i] = "§";
+                }else{
+                    massageArray[i - 1] = "";
+                }
+            }
+        }
+        StringBuilder stringBuilder = new StringBuilder();
+        for (String string : massageArray) {
+            stringBuilder.append(string);
+        }
+        message = stringBuilder.toString();
         // 将消息发送给玩家
         bcServer.broadcast(new ComponentBuilder(message).create());
         IMessenger.info("!!QQ " + message.replaceAll("[§][\\s\\S]", ""), false);
