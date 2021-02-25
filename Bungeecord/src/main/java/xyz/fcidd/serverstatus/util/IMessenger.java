@@ -9,9 +9,9 @@ import xyz.fcidd.serverstatus.ServerStatus;
 
 public class IMessenger {
 
-    private static final Logger logger = ServerStatus.getInstance().getLogger();
-    private static final Logger nonPrefixLogger = Logger.getLogger("");
+    private static final Logger logger = Logger.getLogger("");
     private static final CommandSender CONSOLE = ServerStatus.getInstance().getProxy().getConsole();
+    private static final String PREFIX = "§8[§6ServerStatus§8]§r";
 
     /**
      * INFO
@@ -70,9 +70,9 @@ public class IMessenger {
      */
     public static void log(String msg, Level level, boolean prefix) {
         if (prefix) {
-            logger.log(level, msg);
+            logger.log(level, PREFIX + msg);
         } else {
-            nonPrefixLogger.log(level, msg);
+            logger.log(level, msg);
         }
     }
 

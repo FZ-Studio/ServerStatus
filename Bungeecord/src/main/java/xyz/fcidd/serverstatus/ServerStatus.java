@@ -1,6 +1,7 @@
 package xyz.fcidd.serverstatus;
 
-import lombok.Getter;
+import java.io.IOException;
+
 import net.md_5.bungee.api.plugin.Plugin;
 import xyz.fcidd.serverstatus.command.ServerStatusCommand;
 import xyz.fcidd.serverstatus.config.PluginConfig;
@@ -11,8 +12,12 @@ import xyz.fcidd.serverstatus.util.IMessenger;
  * 插件主类
  */
 public final class ServerStatus extends Plugin {
-    @Getter
+
     private static ServerStatus instance;
+
+    public static ServerStatus getInstance() {
+        return instance;
+    }
 
     /**
      * 继承并重写加载方法
@@ -31,7 +36,13 @@ public final class ServerStatus extends Plugin {
             return;
         }
         // 初始化服务器
-        StartServer.initialize(this);
+        try {
+            StartServer.initialize(this);
+        } catch (IOException e) {
+            IMessenger.warning("§4内置服务器启动失败！");
+            e.printStackTrace();
+            return;
+        }
         // 注册指令
         getProxy().getPluginManager().registerCommand(this, new ServerStatusCommand(this));
         // 已加载

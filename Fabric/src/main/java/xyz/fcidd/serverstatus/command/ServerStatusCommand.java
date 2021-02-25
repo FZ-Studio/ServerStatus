@@ -1,7 +1,9 @@
 package xyz.fcidd.serverstatus.command;
 
+import net.minecraft.command.CommandSource;
 import net.minecraft.server.command.ServerCommandSource;
 import xyz.fcidd.serverstatus.handler.command.ServerStatusCommandHandler;
+import xyz.fcidd.serverstatus.translate.LangManager;
 
 import com.mojang.brigadier.CommandDispatcher;
 import static com.mojang.brigadier.arguments.IntegerArgumentType.*;
@@ -35,11 +37,22 @@ public class ServerStatusCommand {
                     argument("host", string())
                     .executes(c -> ServerStatusCommandHandler.setHost(c, getString(c, "host")))
                 )
-                .executes(c -> ServerStatusCommandHandler.setHost(c, ServerStatusCommandHandler.RESET_HOST))
+                .executes(c -> ServerStatusCommandHandler.setHost(c, ServerStatusCommandHandler.RESET))
             )
             .then(
                 literal("reload")
                 .executes(ServerStatusCommandHandler::reload)
+            )
+            .then(
+                literal("setlang")
+                .then(
+                    argument("lang", string())
+                    .suggests((commandContext, suggestionsBuilder) ->
+                        CommandSource.suggestMatching(LangManager.getLangsList(), suggestionsBuilder)
+                    )
+                    .executes(c -> ServerStatusCommandHandler.setLang(c, getString(c, "lang")))
+                )
+                .executes(c -> ServerStatusCommandHandler.setLang(c, ServerStatusCommandHandler.RESET))
             )
             .then(
                 literal("help")

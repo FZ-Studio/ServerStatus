@@ -1,5 +1,5 @@
 name: ServerStatus-Spigot
-version: 2.0.0
+version: @pluginVersion@
 main: xyz.fcidd.serverstatus.ServerStatus
 api-version: 1.16
 authors:

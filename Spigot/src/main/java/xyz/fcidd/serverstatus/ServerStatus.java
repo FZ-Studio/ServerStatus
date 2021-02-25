@@ -1,6 +1,5 @@
 package xyz.fcidd.serverstatus;
 
-import lombok.Getter;
 import xyz.fcidd.serverstatus.command.ServerStatusCommands;
 import xyz.fcidd.serverstatus.util.SendStatus;
 
@@ -10,8 +9,12 @@ import org.bukkit.plugin.java.JavaPlugin;
  * 插件的主类
  */
 public final class ServerStatus extends JavaPlugin {
-    @Getter
+    
     private static ServerStatus instance;
+
+    public static ServerStatus getInstance() {
+        return instance;
+    }
 
     @Override
     public void onEnable() {
