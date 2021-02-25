@@ -15,4 +15,20 @@ translate-servername:
 server-started-broadcast: &6${server_translation} is online now!  
 server-closed-broadcast: &6${server_translation} is offline now!  
 ## ServerStatus-Fabric
+### 配置文件
+{   
+&emsp;// 连接bc的serverStatus的内置服务器ip及端口，ip默认为localhost，端口默认为556  
+&emsp;"socketIp": "localhost",  
+&emsp;"socketPort": 556,  
+&emsp;// 是否允许4级op使用指令  
+&emsp;"allowOpCommand": true,  
+&emsp;// 语言(zh_cn)，默认为zh_cn  
+&emsp;"lang": "zh_cn"  
+}
+### 使用方法
+#### 自定义语言文件(自制框架试水)
 ## ServerStatus-Spigot
+### 配置文件
+\# 连接bc端本插件的内置服务器ip及端口，ip默认为localhost，端口默认为556  
+socket-ip: localhost  
+socket-port: 556  
