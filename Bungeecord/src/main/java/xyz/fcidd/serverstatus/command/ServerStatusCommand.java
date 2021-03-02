@@ -7,7 +7,7 @@ import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.api.plugin.TabExecutor;
 import xyz.fcidd.serverstatus.ServerStatus;
 import xyz.fcidd.serverstatus.config.PluginConfig;
-import xyz.fcidd.serverstatus.server.StartServer;
+import xyz.fcidd.serverstatus.server.ISocketServer;
 import xyz.fcidd.serverstatus.util.IUtils;
 
 import java.util.LinkedList;
@@ -47,7 +47,6 @@ public class ServerStatusCommand extends Command implements TabExecutor {
      */
     @Override
     public void execute(CommandSender sender, String[] args) {
-        System.out.println(sender.getName());
         boolean adminAuth = sender.hasPermission("serverstatus.command.admin");
         boolean setPortAuth = sender.hasPermission("serverstatus.command.serverstatus.setport");
         boolean reloadAuth = sender.hasPermission("serverstatus.command.serverstatus.reload");
@@ -84,9 +83,9 @@ public class ServerStatusCommand extends Command implements TabExecutor {
                     try {
                         PluginConfig.loadConfig(plugin);
                         // 关闭内置服务器
-                        StartServer.stopServer();
+                        ISocketServer.stopServer();
                         // 初始化内置服务器
-                        StartServer.initialize(plugin);
+                        ISocketServer.startServer();
                     } catch (Exception e) {
                         plugin.getProxy().getLogger().warning("§4重载失败");
                         sender.sendMessage(new ComponentBuilder("§8[§6ServerStatus§8]§2重载失败，请查看日志").create());

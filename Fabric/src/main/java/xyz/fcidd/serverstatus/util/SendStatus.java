@@ -110,9 +110,9 @@ public class SendStatus implements Runnable {
 				BufferedWriter bw = new BufferedWriter(osw);
 				PrintWriter pw = new PrintWriter(bw, true);) {
 			if (message == null) {
-				pw.print(action + "." + ServerStatus.getMcPort());
+				pw.print("serverstatus." + ServerStatus.getMcPort() + "." + action);
 			} else {
-				pw.print(action + "." + ServerStatus.getMcPort() + "." + message);
+				pw.print("serverstatus." + ServerStatus.getMcPort() + "." + action + "." + message);
 			}
 		} catch (ConnectException e) {
 			sendFeedback(scs, LangManager.getTranslated(TranslatableKey.CONNECT_FAILED), Level.WARN);

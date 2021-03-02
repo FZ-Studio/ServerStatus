@@ -1,7 +1,7 @@
-# Compiled class file
+# Compiled class files
 *.class
 
-# Log file
+# Log files
 *.log
 
 # BlueJ files
@@ -21,3 +21,24 @@
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+
+# build files
+Bungeecord/.classpath
+Bungeecord/.project
+Bungeecord/target/*
+Bungeecord/.vscode/*
+Bungeecord/.settings/*
+Bungeecord/target/*
+Fabric/.classpath
+Fabric/.settings/*
+Fabric/.project
+Fabric/.gradle/*
+Fabric/bin/*
+Fabric/.vscode/*
+Fabric/build/*
+Fabric/run/*
+Spigot/.classpath
+Spigot/.project
+Spigot/.settings/*
+Spigot/target/*
+Spigot/target/*

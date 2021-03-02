@@ -67,15 +67,13 @@ public class SendStatus implements Runnable {
                 OutputStreamWriter osw = new OutputStreamWriter(out, StandardCharsets.UTF_8);
                 BufferedWriter bw = new BufferedWriter(osw);
                 PrintWriter pw = new PrintWriter(bw, true);) {
-            int mcPort = plugin.getServer().getPort();
             if (message == null) {
-                pw.print(action + "." + mcPort);
+                pw.print("serverstatus." + plugin.getServer().getPort() + "." + action);
             } else {
-                pw.print(action + "." + mcPort + "." + message);
+                pw.print("serverstatus." + plugin.getServer().getPort() + "." + action + "." + message);
             }
         } catch (ConnectException e) {
-            sendFeedback(sender, "§4连接服务器失败，请检查BC端是否启动，以及ip、端口是否正确",
-                    Level.WARNING);
+            sendFeedback(sender, "§4连接服务器失败，请检查BC端是否启动，以及ip、端口是否正确", Level.WARNING);
             return;
         } catch (IOException e) {
             sendFeedback(sender, "§4发送失败", Level.WARNING);

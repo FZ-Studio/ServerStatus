@@ -5,7 +5,7 @@ import java.io.IOException;
 import net.md_5.bungee.api.plugin.Plugin;
 import xyz.fcidd.serverstatus.command.ServerStatusCommand;
 import xyz.fcidd.serverstatus.config.PluginConfig;
-import xyz.fcidd.serverstatus.server.StartServer;
+import xyz.fcidd.serverstatus.server.ISocketServer;
 import xyz.fcidd.serverstatus.util.IMessenger;
 
 /**
@@ -37,7 +37,7 @@ public final class ServerStatus extends Plugin {
         }
         // 初始化服务器
         try {
-            StartServer.initialize(this);
+            ISocketServer.startServer();
         } catch (IOException e) {
             IMessenger.warning("§4内置服务器启动失败！");
             e.printStackTrace();
@@ -54,7 +54,7 @@ public final class ServerStatus extends Plugin {
      */
     @Override
     public void onDisable() {
-        StartServer.stopServer();
+        ISocketServer.stopServer();
         // 已停用
         IMessenger.info("§2ServerStatus已停用！");
     }
