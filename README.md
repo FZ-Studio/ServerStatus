@@ -1,6 +1,8 @@
 后端服务器上下线提醒  
 会在后端服务器开服完成以及开始关服时发出全体消息  
-可以使用指令发送自定义消息
+可以使用指令发送自定义消息  
+QQ消息规范：!!QQ <插件id，为“serverstatus”> <子服务器id，位于BC端配置文件中> <自定义消息>  
+底层通讯格式：serverstatus.<子服务器端口>.<消息动作>.<自定义内容>.\[自定义内容\]...
 ## ServerStatus-BungeeCord
 ### 配置文件(使用[DreamYaml](https://github.com/Osiris-Team/Dream-Yaml)框架)
 \# 内置服务器端口，默认端口为556  
