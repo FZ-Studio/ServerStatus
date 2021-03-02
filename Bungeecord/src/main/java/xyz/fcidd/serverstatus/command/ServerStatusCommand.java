@@ -8,6 +8,7 @@ import net.md_5.bungee.api.plugin.TabExecutor;
 import xyz.fcidd.serverstatus.ServerStatus;
 import xyz.fcidd.serverstatus.config.PluginConfig;
 import xyz.fcidd.serverstatus.server.ISocketServer;
+import xyz.fcidd.serverstatus.util.IMessenger;
 import xyz.fcidd.serverstatus.util.IUtils;
 
 import java.util.LinkedList;
@@ -63,7 +64,7 @@ public class ServerStatusCommand extends Command implements TabExecutor {
                         e.printStackTrace();
                         break;
                     }
-                    plugin.getProxy().getLogger()
+                    IMessenger
                             .info("已设置端口号为" + PluginConfig.getSocketPort() + "，输入/serverstatus reload生效");
                     sender.sendMessage(
                             new ComponentBuilder("§8[§6ServerStatus§8]§2设置成功！输入/serverstatus reload生效").create());
@@ -77,23 +78,23 @@ public class ServerStatusCommand extends Command implements TabExecutor {
                 } else {
                     // 重载配置
                     if (!sender.equals(ServerStatus.getInstance().getProxy().getConsole())) {
-                        plugin.getProxy().getLogger().info("重载配置文件中...");
+                        IMessenger.info("重载配置文件中...");
                     }
                     sender.sendMessage(new ComponentBuilder("§8[§6ServerStatus§8]§2重载配置文件中...").create());
                     try {
-                        PluginConfig.loadConfig(plugin);
+                        PluginConfig.loadConfig();
                         // 关闭内置服务器
                         ISocketServer.stopServer();
                         // 初始化内置服务器
                         ISocketServer.startServer();
                     } catch (Exception e) {
-                        plugin.getProxy().getLogger().warning("§4重载失败");
+                        IMessenger.warning("§4重载失败");
                         sender.sendMessage(new ComponentBuilder("§8[§6ServerStatus§8]§2重载失败，请查看日志").create());
                         e.printStackTrace();
                         break;
                     }
                     if (!sender.equals(ServerStatus.getInstance().getProxy().getConsole())) {
-                        plugin.getProxy().getLogger().info("已重载");
+                        IMessenger.info("已重载");
                     }
                     sender.sendMessage(new ComponentBuilder("§8[§6ServerStatus§8]§2已重载").create());
                 }

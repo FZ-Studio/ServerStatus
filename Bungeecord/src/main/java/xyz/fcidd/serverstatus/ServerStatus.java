@@ -14,6 +14,12 @@ import xyz.fcidd.serverstatus.util.IMessenger;
 public final class ServerStatus extends Plugin {
 
     private static ServerStatus instance;
+    
+    private String version;
+
+    public String getVersion() {
+        return version;
+    }
 
     public static ServerStatus getInstance() {
         return instance;
@@ -26,9 +32,10 @@ public final class ServerStatus extends Plugin {
     public void onEnable() {
 
         ServerStatus.instance = this;
+        version = getDescription().getVersion();
         // 初始化配置文件
         try {
-            PluginConfig.loadConfig(this);
+            PluginConfig.loadConfig();
             IMessenger.info("§2配置文件加载成功！");
         } catch (Exception e) {
             IMessenger.warning("§4配置文件加载失败！");
